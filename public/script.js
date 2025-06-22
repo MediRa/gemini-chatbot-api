@@ -2,19 +2,19 @@ const form = document.getElementById('chat-form');
 const input = document.getElementById('user-input');
 const chatBox = document.getElementById('chat-box');
 
-form.addEventListener('submit', function (e) {
+form.addEventListener('submit', async function (e) {
   e.preventDefault();
 
   const userMessage = input.value.trim();
   if (!userMessage) return;
 
+  // Display the user's message and clear the input
   appendMessage('user', userMessage);
   input.value = '';
 
-  // Simulasi dummy balasan bot (placeholder)
-  setTimeout(() => {
-    appendMessage('bot', 'Gemini is thinking... (this is dummy response)');
-  }, 1000);
+  // Get the bot's response and display it
+  const botMessage = await submitChatMessage(userMessage);
+  appendMessage('bot', botMessage);
 });
 
 function appendMessage(sender, text) {
@@ -23,4 +23,26 @@ function appendMessage(sender, text) {
   msg.textContent = text;
   chatBox.appendChild(msg);
   chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+async function submitChatMessage(message) {
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.reply; // Assuming your backend returns a JSON with a "reply" field.
+  } catch (error) {
+    console.error('Error submitting chat message:', error);
+    return 'Error: Could not get a response.'; // Handle errors gracefully.
+  }
 }
