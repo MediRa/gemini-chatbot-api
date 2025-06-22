@@ -32,26 +32,26 @@ h2 {
   border-radius: 5px;
   background-color: #fafafa;
   margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .message {
-  margin: 8px 0;
   padding: 8px 12px;
   border-radius: 5px;
   max-width: 80%;
-  display: inline-block;
+  line-height: 1.4; /* Improves readability */
 }
 
 .message.user {
   background-color: #d1e7ff;
-  float: right;
-  text-align: right;
+  align-self: flex-end;
 }
 
 .message.bot {
   background-color: #dff6dd;
-  float: left;
-  text-align: left;
+  align-self: flex-start;
 }
 
 form {
